@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import React from 'react'
-import { SearchIcon } from '@heroicons/react/outline';
+import { SearchIcon, PlusCircleIcon } from '@heroicons/react/outline';
+import { HomeIcon } from '@heroicons/react/solid';
 
 export default function Header() {
   return (
   
-        <div className='flex items-center justify-between max-w-6xl ml-5'>
+        <div className='flex justify-between items-center  max-w-6xl ml-5 mx-4 xl:mx-auto'>
          {/* Left */}
 
             <div className='cursor-pointer h-24 w-24 relative hidden lg:inline-grid'>
@@ -35,7 +36,12 @@ export default function Header() {
 
              {/* Right */}
 
-            <h1>Right Sides</h1>
+        <div className='flex space-x-4 items-center'>
+            <HomeIcon className='hidden md:inline-flex h-6 cursor-pointer hover:scale-125 transition-transform duration-200 ease-out'/>
+            <PlusCircleIcon className='h-6 cursor-pointer hover:scale-125 transition-transform duration-200 ease-out'/>
+            <img src='https://scontent.fdvo1-1.fna.fbcdn.net/v/t39.30808-6/335144975_519088560298176_6784039890760073985_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEZrrlFHKxw958pNVfGk6T9G60DywaXw6wbrQPLBpfDrIJoBwMgpM8G_GZnRzZzTnb2ilGV_H4h32rdWfLdYQih&_nc_ohc=QgMF_Lj0Ex8AX88nuyw&_nc_oc=AQm58tnSJwmSmxIdGrRhrG0dmMfvy7XEsAip7K4Gi6lJ3yePocDx8RE_1BM8Og439T4&_nc_ht=scontent.fdvo1-1.fna&oh=00_AfCmT6fBNtfVTq8L6Tf2v_jRWes7zl62m6IRdN8Xqj8kBw&oe=6540E481' alt='user-image' className='h-10 rounded-full cursor-pointer'/>
+
         </div>
+    </div>
   )
 }
