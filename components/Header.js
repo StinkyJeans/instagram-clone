@@ -47,7 +47,7 @@ export default function Header() {
                 <HomeIcon className='hidden md:inline-flex h-6 cursor-pointer hover:scale-125 transition-transform duration-200 ease-out'/>
                 {session ? (
                     <>
-                    <PlusCircleIcon onClick={()=>setOpen(true)} className='h-6 cursor-pointer hover:scale-125 transition-transform duration-200 ease-out'/>
+                    <PlusCircleIcon onClick={()=>setOpen(!open)}   className='h-6 cursor-pointer hover:scale-125 transition-transform duration-200 ease-out'/>
                     <img 
                     onClick={signOut} 
                     src={session.user.image} 
