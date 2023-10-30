@@ -1,7 +1,9 @@
 import React from 'react'
 import { DotsHorizontalIcon, HeartIcon, ChatIcon, BookmarkIcon, EmojiHappyIcon} from '@heroicons/react/outline'
+import { useSession } from 'next-auth/react'
 
 export default function Post({img, userImg, caption, username,id}) {
+    const {data: session} = useSession();
   return (
     <div className='bg-white my-7 border rounded-md'>
         {/* Post Header */}
@@ -17,6 +19,8 @@ export default function Post({img, userImg, caption, username,id}) {
         <img className='object-cover w-full' src={img} alt=''/>
 
         {/* Post button */}
+
+        {session && (
         <div className='flex justify-between px-4 pt-4'>
 
             <div className='flex space-x-4'>
@@ -25,6 +29,7 @@ export default function Post({img, userImg, caption, username,id}) {
             </div>
             <BookmarkIcon className='btn'/>
         </div>
+        )}
 
         {/* Post Comments */}
 
@@ -36,11 +41,14 @@ export default function Post({img, userImg, caption, username,id}) {
         </p>
 
         {/* Post Input Box */}
+        {session && (
+
         <form className='flex items-center p-4' action=''>
             <EmojiHappyIcon className='h-7'/>
             <input className='border-none flex-1 focus:ring-0' type='text' placeholder='Enter your comment...'></input>
             <button className='text-blue-400 font-bold'>Post</button>
         </form>
+        )}
     </div>
   )
 }
