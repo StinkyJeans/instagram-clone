@@ -1,34 +1,32 @@
-import React from 'react'
-import {modalState} from '../atom/modalAtom';
 import { useRecoilState } from 'recoil';
+import {modalState} from '../atom/modalAtom';
 import Modal from 'react-modal';
 import { CameraIcon } from '@heroicons/react/outline';
 import {useRef, useState } from 'react';
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase';
-import { useSession} from 'next-auth/react';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
+import { userState } from '../atom/userAtom';
 
 export default function UploadModal() {
     const [open, setOpen] = useRecoilState(modalState);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [loading, setLoadings] = useState(false);
-    const filePickerRef = useRef(null);
-    const captionRef = useRef(null);
-    const {data: session} = useSession();
+    const [loading, setLoading] = useState(false);
+    const [currentUser] = useRecoilState(userState);
 
     async function uploadPost() {
         if(loading) return;
 
-        setLoadings(true);
+        setLoading(true);
+        console.log(currentUser)
 
         const docRef = await addDoc(collection(db, "posts"), {
             caption: captionRef.current.value,
-            username: session.user.username,
-            profileImg: session.user.image,
+            username: currentUser?.username,
+            profileImg: currentUser.userImg,
             timestamp: serverTimestamp(),
             
-        })
+        });
         const imageRef = ref(storage, `posts/${docRef.id}/image`);
         await uploadString(imageRef, selectedFile, "data_url").then(
             async (snapshot) => {
@@ -39,7 +37,7 @@ export default function UploadModal() {
             }
         );
         setOpen(false);
-        setLoadings(false);
+        setLoading(false);
         setSelectedFile(null);
     }
     function addImageToPost(event){
@@ -50,9 +48,12 @@ export default function UploadModal() {
             reader.onload = (readerEvent) => {
                 setSelectedFile(readerEvent.target.result);
             }
-           
+        
         
     }
+        const filePickerRef = useRef(null);
+        const captionRef = useRef(null);
+           
    
   return (
     <div>

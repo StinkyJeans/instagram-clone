@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DotsHorizontalIcon, HeartIcon, ChatIcon, BookmarkIcon, EmojiHappyIcon} from '@heroicons/react/outline'
-import { useSession } from 'next-auth/react'
 import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Moment from 'react-moment';
 import { HeartIcon as HeartIconFilled} from '@heroicons/react/solid';
+import { useRecoilState } from 'recoil';
+import { userState } from '../atom/userAtom';
 
 
 export default function Post({img, userImg, caption, username,id}) {
-    const {data: session} = useSession();
     const [comment, setComment] = useState ("")
     const [comments, setComments] = useState ([])
     const [hasLiked, setHasLiked] = useState(false)
     const [likes, setLikes] = useState([])
+    const [currentUser] = useRecoilState(userState);
     useEffect(() => {
         const unsubscribe = onSnapshot(
             query(collection(db, "posts", id, "comments"), orderBy("timestamp", "desc")
@@ -28,16 +29,16 @@ export default function Post({img, userImg, caption, username,id}) {
     }, []);
     useEffect(() => {
         setHasLiked(
-             likes.findIndex((like) => like.id === session?.user.uid)!== -1
+             likes.findIndex((like) => like.id === currentUser?.uid)!== -1
         );
     }, [likes]);
     async function likePost(){
         if(hasLiked){
-            await deleteDoc(doc(db, "posts", id, "likes", session.user.uid))
+            await deleteDoc(doc(db, "posts", id, "likes", currentUser?.uid))
         }else{
             
-            await setDoc(doc(db, "posts", id, "likes" ,session.user.uid), {
-                username: session.user.username
+            await setDoc(doc(db, "posts", id, "likes", currentUser?.uid), {
+                username: currentUser?.username
             });
         }
     }
@@ -47,8 +48,8 @@ export default function Post({img, userImg, caption, username,id}) {
             setComment("")
             await addDoc(collection(db, "posts", id, "comments"), {
                 comment: commentToSend,
-                username: session.user.username,
-                userImage: session.user.image,
+                username: currentUser?.username,
+                userImage: currentUser?.userImg,
                 timestamp: serverTimestamp()
             })
     }
@@ -68,7 +69,7 @@ export default function Post({img, userImg, caption, username,id}) {
 
         {/* Post button */}
 
-        {session && (
+        {currentUser && (
         <div className='flex justify-between px-4 pt-4'>
 
             <div className='flex space-x-4'>
@@ -105,7 +106,7 @@ export default function Post({img, userImg, caption, username,id}) {
                 </div>
             )}
         {/* Post Input Box */}
-        {session && (
+        {currentUser && (
 
         <form className='flex items-center p-4' action=''>
             <EmojiHappyIcon className='h-7'/>
