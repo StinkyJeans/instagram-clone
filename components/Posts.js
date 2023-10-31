@@ -8,7 +8,7 @@ export default function Posts() {
    useEffect(() => {
         const unsubscribe = onSnapshot(
             query(collection(db, "posts"), orderBy(("timestamp"), "desc")), (snapshot) => {
-                setPosts(snapshot.docs)
+                setPosts(snapshot.docs);
             }
         )
     return unsubscribe;
